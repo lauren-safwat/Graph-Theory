@@ -153,6 +153,7 @@ public class Controller implements Initializable {
             pathData.add(row);
         }
         shortestPathData.setItems(pathData);
+        shortestPathData.getSortOrder().add(distanceCol);
     }
 
     /** =========================================================== **/
