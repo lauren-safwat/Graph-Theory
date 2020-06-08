@@ -44,6 +44,14 @@ public class Graph {
         return graph;
     }
 
+    public static int searchVertex(String vertex, ArrayList<Vertex> verticesList) {
+        for (int i = 0; i < verticesList.size(); i++) {
+            if (verticesList.get(i).getSymbol().equalsIgnoreCase(vertex))
+                return i;
+        }
+        return -1;
+    }
+
     public void restartProgram() {
         vertices.clear();
         edges.clear();

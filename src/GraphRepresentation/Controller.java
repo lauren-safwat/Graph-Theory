@@ -137,6 +137,7 @@ public class Controller implements Initializable {
         edgeData = FXCollections.observableArrayList();
         edgeData.addAll(G.edges);
         dataTable.setItems(edgeData);
+        dataTable.getSortOrder().add(edgeNameCol);
     }
 
     public void fillShortestPathsTable() {
@@ -169,7 +170,7 @@ public class Controller implements Initializable {
     }
 
     public void addVertex() {
-        if(searchVertex(vSymbol.getText()) != -1){
+        if(Graph.searchVertex(vSymbol.getText(), G.vertices) != -1){
             alert.setContentText("This vertex is already added to the graph!");
             alert.showAndWait();
         }
@@ -184,7 +185,7 @@ public class Controller implements Initializable {
     }
 
     public void deleteVertex() {
-        int index = searchVertex(vSymbol.getText());
+        int index = Graph.searchVertex(vSymbol.getText(), G.vertices);
         if(index == -1){
             alert.setContentText("No such vertex with this name is found!");
             alert.showAndWait();
@@ -199,14 +200,6 @@ public class Controller implements Initializable {
         enableShortestPathExecution();
     }
 
-    public int searchVertex(String vertex) {
-        for (int i = 0; i < G.vertices.size(); i++) {
-            if (G.vertices.get(i).getSymbol().equalsIgnoreCase(vertex))
-                return i;
-        }
-        return -1;
-    }
-
     /** =========================================================== **/
 
     public void enableAddSourceAndSink() {
@@ -218,8 +211,8 @@ public class Controller implements Initializable {
 
     public void addSourceAndSink() {
         if (validateSourceAndSink()) {
-            G.maxFlowSource = G.vertices.get(searchVertex(maxFlowSource.getText()));
-            G.sink = G.vertices.get(searchVertex(maxFlowSink.getText()));
+            G.maxFlowSource = G.vertices.get(Graph.searchVertex(maxFlowSource.getText(), G.vertices));
+            G.sink = G.vertices.get(Graph.searchVertex(maxFlowSink.getText(), G.vertices));
 
             maxFlowSource.clear();
             maxFlowSink.clear();
@@ -243,7 +236,7 @@ public class Controller implements Initializable {
 
     public void addSource() {
         if (validateSource()) {
-            G.shortestPathSource = G.vertices.get(searchVertex(shortestPathSource.getText()));
+            G.shortestPathSource = G.vertices.get(Graph.searchVertex(shortestPathSource.getText(), G.vertices));
 
             shortestPathSource.clear();
             addSource.setDisable(true);
@@ -284,8 +277,8 @@ public class Controller implements Initializable {
             else
                 flag = false;
 
-            int fromIndex = searchVertex(edgeFrom.getText());
-            int toIndex = searchVertex(edgeTo.getText());
+            int fromIndex = Graph.searchVertex(edgeFrom.getText(), G.vertices);
+            int toIndex = Graph.searchVertex(edgeTo.getText(), G.vertices);
             int cost = Integer.parseInt(edgeWeight.getText());
             if (flag)
                 G.edges.add(new Edge(G.vertices.get(fromIndex), G.vertices.get(toIndex), UNDIRECTED_EDGE, edgeName.getText(), cost));
@@ -297,7 +290,6 @@ public class Controller implements Initializable {
         }
         else {
             alert.showAndWait();
-            resetEdge();
         }
         enableMaxFlowExecution();
         enableShortestPathExecution();
@@ -311,11 +303,12 @@ public class Controller implements Initializable {
 
     public void deleteEdge() {
         delete = true;
-        if(validateEdgeInput())
+        if(validateEdgeInput()){
             fillGraphDataTable();
+            resetEdge();
+        }
         else
             alert.showAndWait();
-        resetEdge();
         enableMaxFlowExecution();
         enableShortestPathExecution();
         delete = false;
@@ -509,7 +502,7 @@ public class Controller implements Initializable {
     /** =========================================================== **/
 
     public boolean validateSource() {
-        if(searchVertex(shortestPathSource.getText()) == -1){
+        if(Graph.searchVertex(shortestPathSource.getText(), G.vertices) == -1){
             alert.setContentText("This vertex doesn't exist in the set of vertices entered. Please re-enter it!");
             return false;
         }
@@ -517,7 +510,7 @@ public class Controller implements Initializable {
     }
 
     public boolean validateSourceAndSink() {
-        if ((searchVertex(maxFlowSource.getText()) == -1) || (searchVertex(maxFlowSink.getText()) == -1)){
+        if ((Graph.searchVertex(maxFlowSource.getText(), G.vertices) == -1) || (Graph.searchVertex(maxFlowSink.getText(), G.vertices) == -1)){
             alert.setContentText("The input contains vertices that don't exist in the set of vertices entered. Please re-enter the input!");
             return false;
         }
@@ -531,7 +524,7 @@ public class Controller implements Initializable {
     }
 
     public boolean validateEdgeInput() {
-        if ((searchVertex(edgeTo.getText()) == -1) || (searchVertex(edgeFrom.getText()) == -1)){
+        if ((Graph.searchVertex(edgeTo.getText(), G.vertices) == -1) || (Graph.searchVertex(edgeFrom.getText(), G.vertices) == -1)){
             alert.setContentText("The input contains vertices that don't exist in the set of vertices entered. Please re-enter the input!");
             return false;
         }

@@ -53,8 +53,8 @@ public class GraphDrawer {
             dots.add(dotA);
         }
         for (i = 0; i < edges.size(); i++) {
-            StackPane dotA = dots.get(vertices.indexOf(edges.get(i).getVertex_First()));
-            StackPane dotB = dots.get(vertices.indexOf(edges.get(i).getVertex_Second()));
+            StackPane dotA = dots.get(Graph.searchVertex(edges.get(i).vertex_First.symbol, vertices));
+            StackPane dotB = dots.get(Graph.searchVertex(edges.get(i).vertex_Second.symbol, vertices));
 
             boolean directed = false;
             if (edges.get(i).getType().equals(EdgeType.DIRECTED_EDGE))
