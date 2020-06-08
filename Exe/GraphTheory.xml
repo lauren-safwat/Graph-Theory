@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\user\Desktop\Lauren\Graph-Theory\out\artifacts\Graph_Theory_jar\Graph-Theory.jar</jar>
-  <outfile>C:\Users\user\Desktop\Lauren\Graph-Theory\Exe\Graph Theory.exe</outfile>
+  <jar>E:\FCAI\3rd year , 2nd semester\Algorithms\Research\Graph-Theory\out\artifacts\Graph_Theory_jar\Graph-Theory.jar</jar>
+  <outfile>E:\FCAI\3rd year , 2nd semester\Algorithms\Research\Graph-Theory\Exe\Graph Theory.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

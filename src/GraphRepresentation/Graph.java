@@ -7,12 +7,18 @@ import static GraphRepresentation.EdgeType.UNDIRECTED_EDGE;
 
 public class Graph {
 
-    public Vertex source;
+    public Vertex shortestPathSource;
+    public Vertex maxFlowSource;
     public Vertex sink;
     public ArrayList<Edge> edges = new ArrayList<>();
-    public static ArrayList<Vertex> vertices = new ArrayList<>();
+    public ArrayList<Vertex> vertices = new ArrayList<>();
+
+    public ArrayList<Vertex> maxFlowVertices = new ArrayList<>();
     public ArrayList<ArrayList<Edge>> maxFlowSteps = new ArrayList<>();
     public ArrayList<String> maxFlowPaths = new ArrayList<>();
+
+    public ArrayList<Vertex> shortestPathVertices = new ArrayList<>();
+    public ArrayList<Edge> shortestPathEdges = new ArrayList<>();
     public static ArrayList<ArrayList<Edge>> dijkstraSteps = new ArrayList<>();
     public static ArrayList<String> shortestSteps = new ArrayList<>();
     public String[] shortestPaths;
@@ -41,11 +47,20 @@ public class Graph {
     public void restartProgram() {
         vertices.clear();
         edges.clear();
+    }
+
+    public void clearMaxFlow() {
         maxFlowPaths.clear();
         maxFlowSteps.clear();
+        maxFlowVertices.clear();
+    }
+
+    public void clearShortestPath() {
         dijkstraSteps.clear();
         shortestSteps.clear();
         distances.clear();
+        shortestPathVertices.clear();
+        shortestPathEdges.clear();
     }
 
     //-----------------------------------------------------------------------
@@ -53,9 +68,9 @@ public class Graph {
     private boolean BFS(int[][] residualGraph, int[] parent) {
         boolean[] visited = new boolean[vertices.size()];
         LinkedList<Integer> queue = new LinkedList<>();
-        queue.add(vertices.indexOf(source));
-        visited[vertices.indexOf(source)] = true;
-        parent[vertices.indexOf(source)] = -1;
+        queue.add(vertices.indexOf(maxFlowSource));
+        visited[vertices.indexOf(maxFlowSource)] = true;
+        parent[vertices.indexOf(maxFlowSource)] = -1;
 
         while (!queue.isEmpty()) {
             int s = queue.poll();
@@ -75,22 +90,28 @@ public class Graph {
         int[] parent = new int[vertices.size()];
         int maxFlow = 0;
 
-        ArrayList<Edge> allEdges = new ArrayList<>();
-        for (Edge edge : edges)
-            allEdges.add(new Edge(edge));
+        for (Vertex vertex : vertices)
+            maxFlowVertices.add(new Vertex(vertex.symbol));
 
-        maxFlowSteps.add(edges);
+        ArrayList<Edge> allEdges = new ArrayList<>();
+        ArrayList<Edge> originalEdges = new ArrayList<>();
+        for (Edge edge : edges){
+            allEdges.add(new Edge(edge));
+            originalEdges.add(new Edge(edge));
+        }
+
+        maxFlowSteps.add(originalEdges);
 
         while (BFS(residualGraph, parent)) {
 
             int pathFlow = Integer.MAX_VALUE;
-            for (int t = vertices.indexOf(sink); t != vertices.indexOf(source); t = parent[t]) {
+            for (int t = vertices.indexOf(sink); t != vertices.indexOf(maxFlowSource); t = parent[t]) {
                 int s = parent[t];
                 pathFlow = Math.min(pathFlow, residualGraph[s][t]);
             }
 
             String path = vertices.get(vertices.indexOf(sink)).symbol;
-            for (int t = vertices.indexOf(sink); t != vertices.indexOf(source); t = parent[t]) {
+            for (int t = vertices.indexOf(sink); t != vertices.indexOf(maxFlowSource); t = parent[t]) {
                 int s = parent[t];
                 residualGraph[s][t] -= pathFlow;
                 residualGraph[t][s] += pathFlow;
@@ -152,18 +173,23 @@ public class Graph {
         shortestPaths = new String[vertices.size()];
         ArrayList<Edge> tree = new ArrayList<>();
 
+        for (Vertex vertex : vertices)
+            shortestPathVertices.add(new Vertex(vertex.symbol));
+        for (Edge edge : edges)
+            shortestPathEdges.add(new Edge(edge));
+
         for (int i = 0; i < distance.length; i++)
             distance[i] = Integer.MAX_VALUE;
 
-        distance[vertices.indexOf(source)] = 0;
-        parent[vertices.indexOf(source)] = -1;
+        distance[vertices.indexOf(shortestPathSource)] = 0;
+        parent[vertices.indexOf(shortestPathSource)] = -1;
 
         for (int i = 0; i < vertices.size(); i++) {
             s = getNearestNode(distance, added);
             added[s] = true;
 
             String path = vertices.get(s).symbol;
-            for (int y = s; y != vertices.indexOf(source); y = parent[y]) {
+            for (int y = s; y != vertices.indexOf(shortestPathSource); y = parent[y]) {
                 int x = parent[y];
                 path = " -> " + path;
                 path = vertices.get(x).symbol + path;

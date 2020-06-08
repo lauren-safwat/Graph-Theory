@@ -30,12 +30,12 @@ public class GraphDrawer {
     public ArrayList<StackPane> dots = new ArrayList<>();
     public StackPane weightAB;
 
-    public void start(Pane pane, ArrayList<Edge> edges, int idx, boolean capacity, boolean shortPath) {
+    public void start(Pane pane, ArrayList<Vertex> vertices, ArrayList<Edge> edges, int idx, boolean capacity, boolean shortPath) {
 
-        for (i = 0; i < Graph.vertices.size(); i++) {
-            StackPane dotA = getDot("skyblue", Graph.vertices.get(i).getSymbol());
+        for (i = 0; i < vertices.size(); i++) {
+            StackPane dotA = getDot("skyblue", vertices.get(i).getSymbol());
             if (shortPath) {
-                String dotName = Graph.vertices.get(i).getSymbol() + "/";
+                String dotName = vertices.get(i).getSymbol() + "/";
                 if(Graph.distances.get(idx)[i] == Integer.MAX_VALUE)
                     dotName += "∞";
                 else
@@ -44,17 +44,17 @@ public class GraphDrawer {
                 dotA = getDot("skyblue", dotName);
 
                 for (int j = 0; j <= idx; j++) {
-                    if (Graph.shortestSteps.get(j).contains(Graph.vertices.get(i).symbol))
+                    if (Graph.shortestSteps.get(j).contains(vertices.get(i).symbol))
                         dotA = getDot("yellow", dotName);
                 }
             }
-            dotA.setLayoutX(295 + 155 * Math.cos(2 * PI / Graph.vertices.size() * i));
-            dotA.setLayoutY(150 + 155 * Math.sin(2 * PI / Graph.vertices.size() * i));
+            dotA.setLayoutX(295 + 155 * Math.cos(2 * PI / vertices.size() * i));
+            dotA.setLayoutY(150 + 155 * Math.sin(2 * PI / vertices.size() * i));
             dots.add(dotA);
         }
         for (i = 0; i < edges.size(); i++) {
-            StackPane dotA = dots.get(Graph.vertices.indexOf(edges.get(i).getVertex_First()));
-            StackPane dotB = dots.get(Graph.vertices.indexOf(edges.get(i).getVertex_Second()));
+            StackPane dotA = dots.get(vertices.indexOf(edges.get(i).getVertex_First()));
+            StackPane dotB = dots.get(vertices.indexOf(edges.get(i).getVertex_Second()));
 
             boolean directed = false;
             if (edges.get(i).getType().equals(EdgeType.DIRECTED_EDGE))
