@@ -5,225 +5,231 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GraphRepresentation.Controller">
-    <Label id="edgeProperties" layoutX="35.0" layoutY="23.0" prefHeight="24.0" prefWidth="98.0" text="Vertex Name:" textAlignment="RIGHT">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <TextField fx:id="vSymbol" layoutX="133.0" layoutY="24.0" onKeyReleased="#enableVertexButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter vertex symbol" />
-    <Button id="addVert" fx:id="addVertex" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="64.0" mnemonicParsing="false" onAction="#addVertex" prefHeight="34.0" prefWidth="220.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Add Vertex" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="14.0" />
-        </font>
-    </Button>
-    <Label layoutX="35.0" layoutY="127.0" prefHeight="24.0" prefWidth="98.0" text="Source:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <TextField fx:id="maxFlowSource" layoutX="134.0" layoutY="124.0" onKeyReleased="#enableAddSourceAndSink" prefHeight="30.0" prefWidth="400.0" promptText="Enter source vertex symbol" />
-    <Label layoutX="35.0" layoutY="165.0" prefHeight="24.0" prefWidth="98.0" text="Sink:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <TextField fx:id="maxFlowSink" layoutX="134.0" layoutY="162.0" onKeyReleased="#enableAddSourceAndSink" prefHeight="30.0" prefWidth="400.0" promptText="Enter sink vertex symbol" />
-    <Button fx:id="addSourceAndSink" blendMode="MULTIPLY" disable="true" layoutX="30.0" layoutY="204.0" mnemonicParsing="false" onAction="#addSourceAndSink" prefHeight="34.0" prefWidth="504.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Add Source &amp; Sink for Maximum Flow Algorithm" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="14.0" />
-        </font>
-    </Button>
-    <Label layoutX="724.0" layoutY="26.0" prefHeight="24.0" prefWidth="98.0" text="Graph Type:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <Label layoutX="724.0" layoutY="70.0" prefHeight="24.0" prefWidth="98.0" text="Edge From:" textAlignment="RIGHT">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <Label layoutX="725.0" layoutY="118.0" prefHeight="24.0" prefWidth="98.0" text="Edge To:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <Label layoutX="725.0" layoutY="164.0" prefHeight="24.0" prefWidth="98.0" text="Edge Name:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <Label layoutX="725.0" layoutY="209.0" prefHeight="24.0" prefWidth="98.0" text="Edge Weight:">
-        <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Label>
-    <ComboBox fx:id="graphType" layoutX="822.0" layoutY="25.0" onAction="#enableEdgeButtons" onKeyReleased="#enableEdgeButtons" prefWidth="400.0" promptText="Select Type">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Directed" />
-                <String fx:value="Undirected" />
-            </FXCollections>
-        </items>
-    </ComboBox>
-    <TextField fx:id="edgeFrom" layoutX="824.0" layoutY="67.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Edge starts from" />
-    <TextField fx:id="edgeTo" layoutX="824.0" layoutY="115.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Edge ends at" />
-    <TextField fx:id="edgeName" layoutX="824.0" layoutY="161.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter edge name" />
-    <TextField fx:id="edgeWeight" layoutX="824.0" layoutY="206.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter weight" />
-    <Button fx:id="addEdge" blendMode="MULTIPLY" disable="true" layoutX="725.0" layoutY="256.0" mnemonicParsing="false" onAction="#addEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Add Edge" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="14.0" />
-        </font>
-    </Button>
-    <Button fx:id="executeMaximumFlow" blendMode="MULTIPLY" disable="true" layoutX="724.0" layoutY="303.0" mnemonicParsing="false" onAction="#executeMaxFlow" prefHeight="34.0" prefWidth="240.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Execute Maximum Flow" textFill="#fafafa">
-        <font>
-            <Font name="System Bold" size="14.0" />
-        </font>
-    </Button>
-    <Label id="edgeProperties" layoutX="1285.0" layoutY="13.0" prefHeight="24.0" prefWidth="120.0" text="Graph Data:" textAlignment="RIGHT">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Label>
-    <TableView fx:id="dataTable" editable="true" layoutX="1285.0" layoutY="40.0" prefHeight="200.0" prefWidth="600.0">
-        <columns>
-            <TableColumn fx:id="edgeNameCol" prefWidth="150.0" text="Edge Name" />
-            <TableColumn fx:id="edgeFromCol" prefWidth="150.0" text="From" />
-            <TableColumn fx:id="edgeToCol" prefWidth="150.0" text="To" />
-            <TableColumn fx:id="edgeWeightCol" prefWidth="150.0" text="Weight" />
-        </columns>
-    </TableView>
-    <Label layoutX="541.0" layoutY="359.0" prefHeight="41.0" prefWidth="249.0" text="Maximum Flow" textAlignment="CENTER" underline="true">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
-    <Label fx:id="maxFlowStepNum" layoutX="36.0" layoutY="488.0" prefHeight="25.0" prefWidth="107.0" underline="true">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Label>
-    <TextField fx:id="maxFlowResult" editable="false" layoutX="35.0" layoutY="433.0" prefHeight="39.0" prefWidth="1201.0">
-        <font>
-            <Font size="18.0" />
-        </font>
-    </TextField>
-    <Label id="edgeProperties" layoutX="274.0" layoutY="491.0" prefHeight="25.0" prefWidth="124.0" text="Flow graph" textAlignment="RIGHT">
-        <font>
-            <Font name="System Bold" size="16.0" />
-        </font>
-    </Label>
-    <Label id="edgeProperties" layoutX="863.0" layoutY="491.0" prefHeight="25.0" prefWidth="150.0" text="Residual graph">
-        <font>
-            <Font name="System Bold" size="16.0" />
-        </font>
-    </Label>
-    <Pane fx:id="flowGraph" layoutX="35.0" layoutY="518.0" maxHeight="1000.0" maxWidth="1000.0" prefHeight="370.0" prefWidth="590.0" style="-fx-border-color: black; -fx-background-color: white;" />
-    <Pane fx:id="capGraph" layoutX="647.0" layoutY="518.0" prefHeight="370.0" prefWidth="590.0" style="-fx-border-color: black; -fx-background-color: white;" />
-    <TextField fx:id="maxFlowPath" editable="false" layoutX="130.0" layoutY="894.0" prefHeight="39.0" prefWidth="1014.0">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </TextField>
-    <Button fx:id="maxFlowPreviousStep" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="894.0" mnemonicParsing="false" onAction="#maxFlowPrevStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&lt;&lt;" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Button>
-    <Label layoutX="1512.0" layoutY="240.0" prefHeight="41.0" prefWidth="157.0" text="Shortest Path" textAlignment="CENTER" underline="true">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
-    <Pane fx:id="shortestPathGraph" layoutX="1285.0" layoutY="518.0" prefHeight="370.0" prefWidth="600.0" style="-fx-border-color: black; -fx-background-color: white;" />
-    <Button fx:id="shortestPathNextStep" blendMode="MULTIPLY" disable="true" layoutX="1825.0" layoutY="894.0" mnemonicParsing="false" onAction="#shortestPathNextStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&gt;&gt;" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Button>
-    <Button fx:id="shortestPathPreviousStep" blendMode="MULTIPLY" disable="true" layoutX="1285.0" layoutY="894.0" mnemonicParsing="false" onAction="#shortestPathPrevStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&lt;&lt;" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Button>
-    <Button id="restart" fx:id="restartProgram" blendMode="MULTIPLY" layoutX="35.0" layoutY="939.0" mnemonicParsing="false" onAction="#restart" prefHeight="45.0" prefWidth="1851.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Restart program" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Button>
-    <Label id="edgeProperties" layoutX="1511.0" layoutY="488.0" prefHeight="25.0" prefWidth="150.0" text="Shortest Path Tree">
-        <font>
-            <Font name="System Bold" size="16.0" />
-        </font>
-    </Label>
-    <Label fx:id="shortestPathStepNum" layoutX="1285.0" layoutY="486.0" prefHeight="25.0" prefWidth="107.0" underline="true">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Label>
-    <Button fx:id="maxFlowNextStep" blendMode="MULTIPLY" disable="true" graphicTextGap="2.0" layoutX="1177.0" layoutY="894.0" mnemonicParsing="false" onAction="#maxFlowNextStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&gt;&gt;" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </Button>
-    <TextField fx:id="shortestPath" editable="false" layoutX="1360.0" layoutY="895.0" prefHeight="39.0" prefWidth="450.0">
-        <font>
-            <Font name="System Bold" size="18.0" />
-        </font>
-    </TextField>
-   <TableView fx:id="shortestPathData" layoutX="1285.0" layoutY="311.0" prefHeight="169.0" prefWidth="600.0">
-     <columns>
-       <TableColumn fx:id="vertexCol" prefWidth="200.0" text="Vetrex" />
-       <TableColumn fx:id="distanceCol" prefWidth="200.0" text="Distance from Source" />
-         <TableColumn fx:id="pathCol" prefWidth="200.0" text="Path" />
-     </columns>
-   </TableView>
-   <Label fx:id="sourceAndSink" layoutX="36.0" layoutY="364.0" prefHeight="67.0" prefWidth="338.0">
-      <font>
-         <Font name="System Bold" size="20.0" />
-      </font>
-   </Label>
-   <Button id="addVert" fx:id="deleteVertex" blendMode="MULTIPLY" disable="true" layoutX="313.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteVertex" prefHeight="34.0" prefWidth="220.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Delete Vertex" textFill="WHITE">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Button>
-   <Button fx:id="updateEdge" blendMode="MULTIPLY" disable="true" layoutX="901.0" layoutY="256.0" mnemonicParsing="false" onAction="#updateEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Update Edge" textFill="WHITE">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Button>
-   <Button fx:id="deleteEdge" blendMode="MULTIPLY" disable="true" layoutX="1075.0" layoutY="256.0" mnemonicParsing="false" onAction="#deleteEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Delete Edge" textFill="WHITE">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Button>
-   <Label layoutX="34.0" layoutY="263.0" prefHeight="24.0" prefWidth="98.0" text="Source:">
-      <font>
-         <Font name="System Bold" size="13.0" />
-      </font>
-   </Label>
-   <TextField fx:id="shortestPathSource" layoutX="133.0" layoutY="260.0" onKeyReleased="#enableAddSource" prefHeight="30.0" prefWidth="400.0" promptText="Enter source vertex symbol" />
-   <Button fx:id="addSource" blendMode="MULTIPLY" disable="true" layoutX="31.0" layoutY="303.0" mnemonicParsing="false" onAction="#addSource" prefHeight="34.0" prefWidth="504.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Add Source for Shortest Paths Algorithm" textFill="WHITE">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Button>
-   <Label fx:id="source" layoutX="1284.0" layoutY="264.0" prefHeight="43.0" prefWidth="169.0">
-      <font>
-         <Font name="System Bold" size="20.0" />
-      </font>
-   </Label>
-   <Button fx:id="executeShortestPath" blendMode="MULTIPLY" disable="true" layoutX="986.0" layoutY="303.0" mnemonicParsing="false" onAction="#executeShortestPaths" prefHeight="34.0" prefWidth="240.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Execute Shortest Paths" textFill="#fafafa">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Button>
-</Pane>
+
+<ScrollPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GraphRepresentation.Controller">
+   <content>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" style="-fx-background-color: lightblue;">
+          <Label id="edgeProperties" layoutX="35.0" layoutY="23.0" prefHeight="24.0" prefWidth="98.0" text="Vertex Name:" textAlignment="RIGHT">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="vSymbol" layoutX="133.0" layoutY="24.0" onKeyReleased="#enableVertexButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter vertex symbol" />
+          <Button id="addVert" fx:id="addVertex" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="64.0" mnemonicParsing="false" onAction="#addVertex" prefHeight="34.0" prefWidth="220.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Add Vertex" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Label layoutX="35.0" layoutY="127.0" prefHeight="24.0" prefWidth="98.0" text="Source:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="maxFlowSource" layoutX="134.0" layoutY="124.0" onKeyReleased="#enableAddSourceAndSink" prefHeight="30.0" prefWidth="400.0" promptText="Enter source vertex symbol" />
+          <Label layoutX="35.0" layoutY="165.0" prefHeight="24.0" prefWidth="98.0" text="Sink:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="maxFlowSink" layoutX="134.0" layoutY="162.0" onKeyReleased="#enableAddSourceAndSink" prefHeight="30.0" prefWidth="400.0" promptText="Enter sink vertex symbol" />
+          <Button fx:id="addSourceAndSink" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="204.0" mnemonicParsing="false" onAction="#addSourceAndSink" prefHeight="34.0" prefWidth="500.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Add Source &amp; Sink for Maximum Flow Algorithm" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Label layoutX="724.0" layoutY="26.0" prefHeight="24.0" prefWidth="98.0" text="Graph Type:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="724.0" layoutY="70.0" prefHeight="24.0" prefWidth="98.0" text="Edge From:" textAlignment="RIGHT">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="725.0" layoutY="118.0" prefHeight="24.0" prefWidth="98.0" text="Edge To:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="725.0" layoutY="164.0" prefHeight="24.0" prefWidth="98.0" text="Edge Name:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="725.0" layoutY="209.0" prefHeight="24.0" prefWidth="98.0" text="Edge Weight:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <ComboBox fx:id="graphType" layoutX="822.0" layoutY="25.0" onAction="#enableEdgeButtons" onKeyReleased="#enableEdgeButtons" prefWidth="400.0" promptText="Select Type">
+              <items>
+                  <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Directed" />
+                      <String fx:value="Undirected" />
+                  </FXCollections>
+              </items>
+          </ComboBox>
+          <TextField fx:id="edgeFrom" layoutX="824.0" layoutY="67.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Edge starts from" />
+          <TextField fx:id="edgeTo" layoutX="824.0" layoutY="115.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Edge ends at" />
+          <TextField fx:id="edgeName" layoutX="824.0" layoutY="161.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter edge name" />
+          <TextField fx:id="edgeWeight" layoutX="824.0" layoutY="206.0" onKeyReleased="#enableEdgeButtons" prefHeight="30.0" prefWidth="400.0" promptText="Enter weight" />
+          <Button fx:id="addEdge" blendMode="MULTIPLY" disable="true" layoutX="725.0" layoutY="256.0" mnemonicParsing="false" onAction="#addEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Add Edge" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Button fx:id="executeMaximumFlow" blendMode="MULTIPLY" disable="true" layoutX="724.0" layoutY="303.0" mnemonicParsing="false" onAction="#executeMaxFlow" prefHeight="34.0" prefWidth="240.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Execute Maximum Flow" textFill="#fafafa">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Label id="edgeProperties" layoutX="1285.0" layoutY="13.0" prefHeight="24.0" prefWidth="120.0" text="Graph Data:" textAlignment="RIGHT">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <TableView fx:id="dataTable" editable="true" layoutX="1285.0" layoutY="40.0" prefHeight="180.0" prefWidth="600.0">
+              <columns>
+                  <TableColumn fx:id="edgeNameCol" prefWidth="150.0" text="Edge Name" />
+                  <TableColumn fx:id="edgeFromCol" prefWidth="150.0" text="From" />
+                  <TableColumn fx:id="edgeToCol" prefWidth="150.0" text="To" />
+                  <TableColumn fx:id="edgeWeightCol" prefWidth="150.0" text="Weight" />
+              </columns>
+          </TableView>
+          <Label layoutX="541.0" layoutY="342.0" prefHeight="41.0" prefWidth="249.0" text="Maximum Flow" textAlignment="CENTER" underline="true">
+              <font>
+                  <Font name="System Bold" size="24.0" />
+              </font>
+          </Label>
+          <Label fx:id="maxFlowStepNum" layoutX="36.0" layoutY="465.0" prefHeight="25.0" prefWidth="107.0" underline="true">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <TextField fx:id="maxFlowResult" editable="false" layoutX="35.0" layoutY="416.0" prefHeight="39.0" prefWidth="1191.0">
+              <font>
+                  <Font size="18.0" />
+              </font>
+          </TextField>
+          <Label id="edgeProperties" layoutX="274.0" layoutY="468.0" prefHeight="25.0" prefWidth="124.0" text="Flow graph" textAlignment="RIGHT">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+          <Label id="edgeProperties" layoutX="863.0" layoutY="468.0" prefHeight="25.0" prefWidth="150.0" text="Residual graph">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+          <Pane fx:id="flowGraph" layoutX="35.0" layoutY="495.0" maxHeight="1000.0" maxWidth="1000.0" prefHeight="370.0" prefWidth="590.0" style="-fx-border-color: black; -fx-background-color: white;" />
+          <Pane fx:id="capGraph" layoutX="637.0" layoutY="495.0" prefHeight="370.0" prefWidth="590.0" style="-fx-border-color: black; -fx-background-color: white;" />
+          <TextField fx:id="maxFlowPath" editable="false" layoutX="123.0" layoutY="877.0" prefHeight="39.0" prefWidth="1014.0">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </TextField>
+          <Button fx:id="maxFlowPreviousStep" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="877.0" mnemonicParsing="false" onAction="#maxFlowPrevStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&lt;&lt;" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Button>
+          <Label layoutX="1512.0" layoutY="219.0" prefHeight="41.0" prefWidth="157.0" text="Shortest Path" textAlignment="CENTER" underline="true">
+              <font>
+                  <Font name="System Bold" size="24.0" />
+              </font>
+          </Label>
+          <Pane fx:id="shortestPathGraph" layoutX="1285.0" layoutY="495.0" prefHeight="370.0" prefWidth="600.0" style="-fx-border-color: black; -fx-background-color: white;" />
+          <Button fx:id="shortestPathNextStep" blendMode="MULTIPLY" disable="true" layoutX="1825.0" layoutY="877.0" mnemonicParsing="false" onAction="#shortestPathNextStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&gt;&gt;" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Button>
+          <Button fx:id="shortestPathPreviousStep" blendMode="MULTIPLY" disable="true" layoutX="1285.0" layoutY="877.0" mnemonicParsing="false" onAction="#shortestPathPrevStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&lt;&lt;" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Button>
+          <Button id="restart" fx:id="restartProgram" blendMode="MULTIPLY" layoutX="35.0" layoutY="927.0" mnemonicParsing="false" onAction="#restart" prefHeight="45.0" prefWidth="1851.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Restart program" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Button>
+          <Label id="edgeProperties" layoutX="1512.0" layoutY="470.0" prefHeight="25.0" prefWidth="150.0" text="Shortest Path Tree">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+          <Label fx:id="shortestPathStepNum" layoutX="1285.0" layoutY="469.0" prefHeight="25.0" prefWidth="107.0" underline="true">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Button fx:id="maxFlowNextStep" blendMode="MULTIPLY" disable="true" graphicTextGap="2.0" layoutX="1167.0" layoutY="877.0" mnemonicParsing="false" onAction="#maxFlowNextStep" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="&gt;&gt;" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Button>
+          <TextField fx:id="shortestPath" editable="false" layoutX="1360.0" layoutY="877.0" prefHeight="39.0" prefWidth="450.0">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </TextField>
+          <TableView fx:id="shortestPathData" layoutX="1285.0" layoutY="284.0" prefHeight="180.0" prefWidth="600.0">
+              <columns>
+                  <TableColumn fx:id="vertexCol" prefWidth="200.0" text="Vetrex" />
+                  <TableColumn fx:id="distanceCol" prefWidth="200.0" text="Distance from Source" />
+                  <TableColumn fx:id="pathCol" prefWidth="200.0" text="Path from Source" />
+              </columns>
+          </TableView>
+          <Label fx:id="sourceAndSink" layoutX="36.0" layoutY="347.0" prefHeight="67.0" prefWidth="338.0">
+              <font>
+                  <Font name="System Bold" size="20.0" />
+              </font>
+          </Label>
+          <Button id="addVert" fx:id="deleteVertex" blendMode="MULTIPLY" disable="true" layoutX="311.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteVertex" prefHeight="34.0" prefWidth="220.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Delete Vertex" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Button fx:id="updateEdge" blendMode="MULTIPLY" disable="true" layoutX="901.0" layoutY="256.0" mnemonicParsing="false" onAction="#updateEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Update Edge" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Button fx:id="deleteEdge" blendMode="MULTIPLY" disable="true" layoutX="1075.0" layoutY="256.0" mnemonicParsing="false" onAction="#deleteEdge" prefHeight="34.0" prefWidth="150.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 5px;" text="Delete Edge" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Label layoutX="34.0" layoutY="263.0" prefHeight="24.0" prefWidth="98.0" text="Source:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="shortestPathSource" layoutX="133.0" layoutY="260.0" onKeyReleased="#enableAddSource" prefHeight="30.0" prefWidth="400.0" promptText="Enter source vertex symbol" />
+          <Button fx:id="addSource" blendMode="MULTIPLY" disable="true" layoutX="35.0" layoutY="303.0" mnemonicParsing="false" onAction="#addSource" prefHeight="34.0" prefWidth="500.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Add Source for Shortest Paths Algorithm" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+          <Label fx:id="source" layoutX="1284.0" layoutY="247.0" prefHeight="39.0" prefWidth="169.0">
+              <font>
+                  <Font name="System Bold" size="20.0" />
+              </font>
+          </Label>
+          <Button fx:id="executeShortestPath" blendMode="MULTIPLY" disable="true" layoutX="986.0" layoutY="303.0" mnemonicParsing="false" onAction="#executeShortestPaths" prefHeight="34.0" prefWidth="240.0" style="-fx-background-color: black; -fx-border-color: lightgray; -fx-border-radius: 5px; -fx-border-width: 2px;" text="Execute Shortest Paths" textFill="#fafafa">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Button>
+      </Pane>
+   </content>
+</ScrollPane>
