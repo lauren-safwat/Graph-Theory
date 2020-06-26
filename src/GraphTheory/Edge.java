@@ -1,4 +1,4 @@
-package GraphRepresentation;
+package GraphTheory;
 
 import javafx.beans.property.SimpleStringProperty;
 

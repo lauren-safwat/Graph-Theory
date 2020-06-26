@@ -1,4 +1,4 @@
-package GraphRepresentation;
+package GraphTheory;
 
 public enum EdgeType {
 

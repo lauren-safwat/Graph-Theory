@@ -1,4 +1,4 @@
-package GraphRepresentation;
+package GraphTheory;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -36,15 +36,15 @@ public class GraphDrawer {
             StackPane dotA = getDot("skyblue", vertices.get(i).getSymbol());
             if (shortPath) {
                 String dotName = vertices.get(i).getSymbol() + "/";
-                if(Graph.distances.get(idx)[i] == Integer.MAX_VALUE)
+                if(ShortestPath.distances.get(idx)[i] == Integer.MAX_VALUE)
                     dotName += "∞";
                 else
-                    dotName += Graph.distances.get(idx)[i];
+                    dotName += ShortestPath.distances.get(idx)[i];
 
                 dotA = getDot("skyblue", dotName);
 
                 for (int j = 0; j <= idx; j++) {
-                    if (Graph.shortestSteps.get(j).contains(vertices.get(i).symbol))
+                    if (ShortestPath.shortestSteps.get(j).contains(vertices.get(i).symbol))
                         dotA = getDot("yellow", dotName);
                 }
             }
@@ -63,12 +63,12 @@ public class GraphDrawer {
             if (directed) {
                 int index = isBidirectional(edges.get(i), edges);
                 if (index == -1)
-                    buildSingleDirectionalLine(dotA, dotB, pane, true, false, edges, capacity, idx, shortPath);
+                    buildSingleDirectionalLine(dotA, dotB, pane, true, edges, capacity, idx, shortPath);
                 else {
-                    buildBiDirectionalLine(true, dotA, dotB, pane, edges, capacity, idx, shortPath);
+                    buildBiDirectionalLine(dotA, dotB, pane, edges, capacity, idx, shortPath);
                 }
             } else
-                buildSingleDirectionalLine(dotA, dotB, pane, false, false, edges, capacity, idx, shortPath);
+                buildSingleDirectionalLine(dotA, dotB, pane, false, edges, capacity, idx, shortPath);
 
             if (!pane.getChildren().contains(dotA) && !pane.getChildren().contains(dotB))
                 pane.getChildren().addAll(dotA, dotB);
@@ -95,42 +95,40 @@ public class GraphDrawer {
         return -1;
     }
 
-    private void buildSingleDirectionalLine(StackPane startDot, StackPane endDot, Pane parent, boolean hasEndArrow, boolean hasStartArrow, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
+    private void buildSingleDirectionalLine(StackPane startDot, StackPane endDot, Pane parent, boolean hasEndArrow, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
         boolean contained = false;
         if (shortPath && (idx != 0)) {
-            for (int j = 0; j < Graph.dijkstraSteps.get(idx - 1).size(); j++) {
-                if (Graph.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
+            for (int j = 0; j < ShortestPath.dijkstraSteps.get(idx - 1).size(); j++) {
+                if (ShortestPath.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
                     contained = true;
                     break;
                 }
             }
         }
-        Line line = getLine(startDot, endDot, contained, idx, shortPath);
+        Line line = getLine(startDot, endDot, contained, shortPath);
         StackPane arrowAB = getArrow(true, line, startDot, endDot);
         if (!hasEndArrow) {
             arrowAB.setOpacity(0);
         }
         StackPane arrowBA = getArrow(false, line, startDot, endDot);
-        if (!hasStartArrow) {
-            arrowBA.setOpacity(0);
-        }
+        arrowBA.setOpacity(0);
 
         weightAB = getWeight(line, edges, capacity, shortPath);
         weightAB.toFront();
         parent.getChildren().addAll(line, weightAB, arrowBA, arrowAB);
     }
 
-    private void buildBiDirectionalLine(boolean isEnd, StackPane startDot, StackPane endDot, Pane parent, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
+    private void buildBiDirectionalLine(StackPane startDot, StackPane endDot, Pane parent, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
         boolean contained = false;
         if (shortPath && (idx != 0)) {
-            for (int j = 0; j < Graph.dijkstraSteps.get(idx - 1).size(); j++) {
-                if (Graph.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
+            for (int j = 0; j < ShortestPath.dijkstraSteps.get(idx - 1).size(); j++) {
+                if (ShortestPath.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
                     contained = true;
                     break;
                 }
             }
         }
-        Line virtualCenterLine = getLine(startDot, endDot, contained, idx, shortPath);
+        Line virtualCenterLine = getLine(startDot, endDot, contained, shortPath);
         virtualCenterLine.setOpacity(0);
         StackPane centerLineArrowAB = getArrow(true, virtualCenterLine, startDot, endDot);
         centerLineArrowAB.setOpacity(0);
@@ -146,7 +144,7 @@ public class GraphDrawer {
             directedLine.setStrokeWidth(5);
         }
 
-        double diff = isEnd ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
+        double diff = -centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
             Rotate r = new Rotate();
             r.setPivotX(virtualCenterLine.getStartX());
@@ -171,13 +169,13 @@ public class GraphDrawer {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
-        StackPane mainArrow = getArrow(isEnd, directedLine, startDot, endDot);
+        StackPane mainArrow = getArrow(true, directedLine, startDot, endDot);
         weightAB = getWeight(directedLine, edges, capacity, shortPath);
         weightAB.toFront();
         parent.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, weightAB, directedLine, mainArrow);
     }
 
-    private Line getLine(StackPane startDot, StackPane endDot, boolean contained, int idx, boolean shortPath) {
+    private Line getLine(StackPane startDot, StackPane endDot, boolean contained, boolean shortPath) {
         Line line = new Line();
         line.setStroke(Color.ROYALBLUE);
         line.setStrokeWidth(2);
@@ -223,8 +221,7 @@ public class GraphDrawer {
             }
 
             double t = dt / lineLength;
-            double dx = ((1 - t) * line.getStartX()) + (t * line.getEndX());
-            return dx;
+            return ((1 - t) * line.getStartX()) + (t * line.getEndX());
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
 
         // Determining the y point on the line which is at a certain distance.
@@ -239,8 +236,7 @@ public class GraphDrawer {
                 dt = (startDot.getHeight() / 2) + (arrow.getHeight() / 2);
             }
             double t = dt / lineLength;
-            double dy = ((1 - t) * line.getStartY()) + (t * line.getEndY());
-            return dy;
+            return ((1 - t) * line.getStartY()) + (t * line.getEndY());
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
 
         arrow.layoutXProperty().bind(tX.subtract(arrow.widthProperty().divide(2)));
@@ -263,10 +259,10 @@ public class GraphDrawer {
     }
 
     private StackPane getWeight(Line line, ArrayList<Edge> edges, boolean capacity, boolean shortestPath) {
-        double size = 30;
         StackPane weight = new StackPane();
         weight.setStyle("-fx-background-color:transparent;");
-        /*weight.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
+        /*double size = 30;
+        weight.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
         weight.setPrefSize(size * 3, size);
         weight.setMaxSize(size * 3, size);
         weight.setMinSize(size * 3, size);*/
