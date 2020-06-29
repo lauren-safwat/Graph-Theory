@@ -1,28 +1,70 @@
 package GraphTheory;
 
+import GraphTheory.GraphModels.Edge;
+import GraphTheory.GraphModels.Graph;
+import GraphTheory.GraphModels.Vertex;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import static GraphTheory.EdgeType.UNDIRECTED_EDGE;
+import static GraphTheory.GraphModels.EdgeType.UNDIRECTED_EDGE;
 
 public class ShortestPath {
 
-    public Vertex source;
+    private Vertex source;
 
-    public ArrayList<Vertex> vertices = new ArrayList<>();
-    public ArrayList<Edge> edges = new ArrayList<>();
+    private ArrayList<Vertex> vertices = new ArrayList<>();
+    private ArrayList<Edge> edges = new ArrayList<>();
 
-    public static ArrayList<ArrayList<Edge>> dijkstraSteps = new ArrayList<>();
-    public static ArrayList<String> shortestSteps = new ArrayList<>();
-    public String[] shortestPaths;
-    public int[] distance;
-    public static ArrayList<int[]> distances = new ArrayList<>();
+    private static ArrayList<ArrayList<Edge>> dijkstraSteps = new ArrayList<>();
+    private static ArrayList<String> shortestSteps = new ArrayList<>();
+    private String[] shortestPaths;
+    private int[] distance;
+    private static ArrayList<int[]> distances = new ArrayList<>();
+
+    /**=============================================================================**/
+
+    public Vertex getSource() {
+        return source;
+    }
+
+    public void setSource(Vertex source) {
+        this.source = source;
+    }
+
+    public ArrayList<Vertex> getVertices() {
+        return vertices;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
+    public static ArrayList<ArrayList<Edge>> getDijkstraSteps() {
+        return dijkstraSteps;
+    }
+
+    public static ArrayList<String> getShortestSteps() {
+        return shortestSteps;
+    }
+
+    public String[] getShortestPaths() {
+        return shortestPaths;
+    }
+
+    public int[] getDistance() {
+        return distance;
+    }
+
+    public static ArrayList<int[]> getDistances() {
+        return distances;
+    }
 
     /**=============================================================================**/
 
     private int getNearestNode(boolean[] inSet) {
         int index = -1;
         int min = Integer.MAX_VALUE;
-        for (int i = 0; i < Graph.vertices.size(); i++) {
+        for (int i = 0; i < Graph.getVertices().size(); i++) {
             if (!inSet[i] && (distance[i] <= min)) {
                 min = distance[i];
                 index = i;
@@ -33,34 +75,34 @@ public class ShortestPath {
 
     public void dijkstra() {
         int s;
-        int[][] graph = Graph.buildAdjacencyMatrix();
-        int[] parent = new int[Graph.vertices.size()];
-        boolean[] added = new boolean[Graph.vertices.size()];
-        distance = new int[Graph.vertices.size()];
-        shortestPaths = new String[Graph.vertices.size()];
+        int[][] graph = Graph.buildWeightAdjacencyMatrix();
+        int[] parent = new int[Graph.getVertices().size()];
+        boolean[] added = new boolean[Graph.getVertices().size()];
+        distance = new int[Graph.getVertices().size()];
+        shortestPaths = new String[Graph.getVertices().size()];
         ArrayList<Edge> tree = new ArrayList<>();
 
-        for (Vertex vertex : Graph.vertices)
-            vertices.add(new Vertex(vertex.symbol));
-        for (Edge edge : Graph.edges)
+        for (Vertex vertex : Graph.getVertices())
+            vertices.add(new Vertex(vertex.getSymbol()));
+        for (Edge edge : Graph.getEdges())
             edges.add(new Edge(edge));
 
         Arrays.fill(distance, Integer.MAX_VALUE);
 
-        distance[Graph.vertices.indexOf(source)] = 0;
-        parent[Graph.vertices.indexOf(source)] = -1;
+        distance[Graph.getVertices().indexOf(source)] = 0;
+        parent[Graph.getVertices().indexOf(source)] = -1;
 
         for (int i = 0; i < vertices.size(); i++) {
             s = getNearestNode(added);
             added[s] = true;
 
-            StringBuilder path = new StringBuilder(vertices.get(s).symbol);
-            for (int y = s; y != Graph.vertices.indexOf(source); y = parent[y]) {
+            StringBuilder path = new StringBuilder(vertices.get(s).getSymbol());
+            for (int y = s; y != Graph.getVertices().indexOf(source); y = parent[y]) {
                 int x = parent[y];
                 path.insert(0, " -> ");
-                path.insert(0, vertices.get(x).symbol);
-                for (Edge edge : Graph.edges) {
-                    if ((edge.vertex_First == Graph.vertices.get(x) && edge.vertex_Second == Graph.vertices.get(y)) || (edge.vertex_First == Graph.vertices.get(y) && edge.vertex_Second == Graph.vertices.get(x) && edge.type == UNDIRECTED_EDGE))
+                path.insert(0, vertices.get(x).getSymbol());
+                for (Edge edge : Graph.getEdges()) {
+                    if ((edge.getVertex_First() == Graph.getVertices().get(x) && edge.getVertex_Second() == Graph.getVertices().get(y)) || (edge.getVertex_First() == Graph.getVertices().get(y) && edge.getVertex_Second() == Graph.getVertices().get(x) && edge.getType() == UNDIRECTED_EDGE))
                         if (!tree.contains(edge))
                             tree.add(edge);
                 }

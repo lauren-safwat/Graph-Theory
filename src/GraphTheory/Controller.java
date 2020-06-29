@@ -1,5 +1,8 @@
 package GraphTheory;
 
+import GraphTheory.GraphModels.Edge;
+import GraphTheory.GraphModels.Graph;
+import GraphTheory.GraphModels.Vertex;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -14,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static GraphTheory.EdgeType.DIRECTED_EDGE;
-import static GraphTheory.EdgeType.UNDIRECTED_EDGE;
+import static GraphTheory.GraphModels.EdgeType.DIRECTED_EDGE;
+import static GraphTheory.GraphModels.EdgeType.UNDIRECTED_EDGE;
 
 
 public class Controller implements Initializable {
@@ -135,7 +138,7 @@ public class Controller implements Initializable {
 
     public void fillGraphDataTable() {
         edgeData = FXCollections.observableArrayList();
-        edgeData.addAll(Graph.edges);
+        edgeData.addAll(Graph.getEdges());
         dataTable.setItems(edgeData);
         dataTable.getSortOrder().add(edgeNameCol);
     }
@@ -145,11 +148,11 @@ public class Controller implements Initializable {
         distanceCol.setCellValueFactory(data -> data.getValue().get(1));
         pathCol.setCellValueFactory(data -> data.getValue().get(2));
 
-        for (int i = 0; i < Graph.vertices.size(); i++) {
+        for (int i = 0; i < Graph.getVertices().size(); i++) {
             List<StringProperty> row = new ArrayList<>();
-            row.add(new SimpleStringProperty(Graph.vertices.get(i).symbol));
-            row.add(new SimpleStringProperty(shortestPath.distance[i] + ""));
-            row.add(new SimpleStringProperty(shortestPath.shortestPaths[i]));
+            row.add(new SimpleStringProperty(Graph.getVertices().get(i).getSymbol()));
+            row.add(new SimpleStringProperty(shortestPath.getDistance()[i] + ""));
+            row.add(new SimpleStringProperty(shortestPath.getShortestPaths()[i]));
             pathData.add(row);
         }
         shortestPathData.setItems(pathData);
@@ -161,7 +164,7 @@ public class Controller implements Initializable {
     public void enableVertexButtons() {
         if (!vSymbol.getText().isEmpty()){
             addVertex.setDisable(false);
-            if(Graph.vertices.size() != 0)
+            if(Graph.getVertices().size() != 0)
                 deleteVertex.setDisable(false);
         }
         else {
@@ -171,12 +174,12 @@ public class Controller implements Initializable {
     }
 
     public void addVertex() {
-        if(Graph.searchVertex(vSymbol.getText(), Graph.vertices) != -1){
+        if(Graph.searchVertex(vSymbol.getText(), Graph.getVertices()) != -1){
             alert.setContentText("This vertex is already added to the graph!");
             alert.showAndWait();
         }
         else{
-            Graph.vertices.add(new Vertex(vSymbol.getText()));
+            Graph.getVertices().add(new Vertex(vSymbol.getText()));
         }
         vSymbol.clear();
         deleteVertex.setDisable(true);
@@ -186,13 +189,13 @@ public class Controller implements Initializable {
     }
 
     public void deleteVertex() {
-        int index = Graph.searchVertex(vSymbol.getText(), Graph.vertices);
+        int index = Graph.searchVertex(vSymbol.getText(), Graph.getVertices());
         if(index == -1){
             alert.setContentText("No such vertex with this name is found!");
             alert.showAndWait();
         }
         else{
-            Graph.vertices.remove(index);
+            Graph.getVertices().remove(index);
         }
         vSymbol.clear();
         addVertex.setDisable(true);
@@ -209,8 +212,8 @@ public class Controller implements Initializable {
 
     public void addSourceAndSink() {
         if (validateSourceAndSink()) {
-            maximumFlow.source = Graph.vertices.get(Graph.searchVertex(maxFlowSource.getText(), Graph.vertices));
-            maximumFlow.sink = Graph.vertices.get(Graph.searchVertex(maxFlowSink.getText(), Graph.vertices));
+            maximumFlow.setSource(Graph.getVertices().get(Graph.searchVertex(maxFlowSource.getText(), Graph.getVertices())));
+            maximumFlow.setSink(Graph.getVertices().get(Graph.searchVertex(maxFlowSink.getText(), Graph.getVertices())));
 
             maxFlowSource.clear();
             maxFlowSink.clear();
@@ -231,7 +234,7 @@ public class Controller implements Initializable {
 
     public void addSource() {
         if (validateSource()) {
-            shortestPath.source = Graph.vertices.get(Graph.searchVertex(shortestPathSource.getText(), Graph.vertices));
+            shortestPath.setSource(Graph.getVertices().get(Graph.searchVertex(shortestPathSource.getText(), Graph.getVertices())));
 
             shortestPathSource.clear();
             addSource.setDisable(true);
@@ -247,7 +250,7 @@ public class Controller implements Initializable {
     public void enableEdgeButtons() {
         if(edgeTo.getText().isEmpty() || edgeFrom.getText().isEmpty())
             deleteEdge.setDisable(true);
-        else if(Graph.edges.size() != 0)
+        else if(Graph.getEdges().size() != 0)
             deleteEdge.setDisable(false);
 
         if (edgeTo.getText().isEmpty() || edgeFrom.getText().isEmpty() || edgeName.getText().isEmpty() || edgeWeight.getText().isEmpty() || graphType.getSelectionModel().isEmpty()){
@@ -256,7 +259,7 @@ public class Controller implements Initializable {
         }
         else{
             addEdge.setDisable(false);
-            if(Graph.edges.size() != 0)
+            if(Graph.getEdges().size() != 0)
                 updateEdge.setDisable(false);
         }
     }
@@ -269,13 +272,13 @@ public class Controller implements Initializable {
             }
             flag = chosen.equals("Undirected");
 
-            int fromIndex = Graph.searchVertex(edgeFrom.getText(), Graph.vertices);
-            int toIndex = Graph.searchVertex(edgeTo.getText(), Graph.vertices);
+            int fromIndex = Graph.searchVertex(edgeFrom.getText(), Graph.getVertices());
+            int toIndex = Graph.searchVertex(edgeTo.getText(), Graph.getVertices());
             int cost = Integer.parseInt(edgeWeight.getText());
             if (flag)
-                Graph.edges.add(new Edge(Graph.vertices.get(fromIndex), Graph.vertices.get(toIndex), UNDIRECTED_EDGE, edgeName.getText(), cost));
+                Graph.getEdges().add(new Edge(Graph.getVertices().get(fromIndex), Graph.getVertices().get(toIndex), UNDIRECTED_EDGE, edgeName.getText(), cost));
             else
-                Graph.edges.add(new Edge(Graph.vertices.get(fromIndex), Graph.vertices.get(toIndex), DIRECTED_EDGE, edgeName.getText(), cost));
+                Graph.getEdges().add(new Edge(Graph.getVertices().get(fromIndex), Graph.getVertices().get(toIndex), DIRECTED_EDGE, edgeName.getText(), cost));
 
             fillGraphDataTable();
             resetEdge();
@@ -324,14 +327,14 @@ public class Controller implements Initializable {
         if (ind == 0)
             maxFlowPath.setText("Initial state...");
         else
-            maxFlowPath.setText("Path #" + ind + ":  " + maximumFlow.maxFlowPaths.get(ind - 1));
+            maxFlowPath.setText("Path #" + ind + ":  " + maximumFlow.getMaxFlowPaths().get(ind - 1));
 
         capGraph.getChildren().clear();
         flowGraph.getChildren().clear();
         GraphDrawer pl = new GraphDrawer();
         GraphDrawer pl2 = new GraphDrawer();
-        pl.start(capGraph, maximumFlow.vertices, maximumFlow.maxFlowSteps.get(ind), ind, true, false);
-        pl2.start(flowGraph, maximumFlow.vertices, maximumFlow.maxFlowSteps.get(ind), ind, false, false);
+        pl.start(capGraph, maximumFlow.getVertices(), maximumFlow.getMaxFlowSteps().get(ind), ind, true, false);
+        pl2.start(flowGraph, maximumFlow.getVertices(), maximumFlow.getMaxFlowSteps().get(ind), ind, false, false);
     }
 
     public void maxFlowPrevStep() {
@@ -346,7 +349,7 @@ public class Controller implements Initializable {
         maxFlowStepIndex++;
         maxFlowGraph(maxFlowStepIndex);
         maxFlowPreviousStep.setDisable(false);
-        if (maxFlowStepIndex == (maximumFlow.maxFlowSteps.size() - 1))
+        if (maxFlowStepIndex == (maximumFlow.getMaxFlowSteps().size() - 1))
             maxFlowNextStep.setDisable(true);
     }
 
@@ -357,11 +360,11 @@ public class Controller implements Initializable {
         if(ind == 0)
             shortestPaths.setText("Initial state..");
         else
-            shortestPaths.setText("Path #" + ind + ": " + ShortestPath.shortestSteps.get(ind));
+            shortestPaths.setText("Path #" + ind + ": " + ShortestPath.getShortestSteps().get(ind));
 
         shortestPathGraph.getChildren().clear();
         GraphDrawer pl3 = new GraphDrawer();
-        pl3.start(shortestPathGraph, shortestPath.vertices, shortestPath.edges, ind, false, true);
+        pl3.start(shortestPathGraph, shortestPath.getVertices(), shortestPath.getEdges(), ind, false, true);
     }
 
     public void shortestPathPrevStep() {
@@ -376,32 +379,32 @@ public class Controller implements Initializable {
         shortestPathStepIndex++;
         shortestPathGraph(shortestPathStepIndex);
         shortestPathPreviousStep.setDisable(false);
-        if (shortestPathStepIndex == (ShortestPath.dijkstraSteps.size()))
+        if (shortestPathStepIndex == (ShortestPath.getDijkstraSteps().size()))
             shortestPathNextStep.setDisable(true);
     }
 
     /** =========================================================== **/
 
     public void enableShortestPathExecution(){
-        executeShortestPath.setDisable(Graph.edges.size() <= 0 || shortestPath.source == null);
+        executeShortestPath.setDisable(Graph.getEdges().size() <= 0 || shortestPath.getSource() == null);
     }
 
     public void enableMaxFlowExecution(){
-        executeMaximumFlow.setDisable(Graph.edges.size() <= 0 || maximumFlow.source == null || maximumFlow.sink == null);
+        executeMaximumFlow.setDisable(Graph.getEdges().size() <= 0 || maximumFlow.getSource() == null || maximumFlow.getSink() == null);
     }
 
     public void executeMaxFlow() {
         clearMaxFlowResults();
-        sourceAndSink.setText("Source: " + maximumFlow.source.symbol + "\nSink: " + maximumFlow.sink.symbol);
+        sourceAndSink.setText("Source: " + maximumFlow.getSource().getSymbol() + "\nSink: " + maximumFlow.getSink().getSymbol());
         maximumFlow.fordFulkerson();
-        maxFlowResult.setText("Maximum flow = " + maximumFlow.maxFlow);
+        maxFlowResult.setText("Maximum flow = " + maximumFlow.getMaxFlow());
         maxFlowGraph(0);
         maxFlowNextStep.setDisable(false);
     }
 
     public void executeShortestPaths() {
         clearShortestPathResults();
-        source.setText("Source: " + shortestPath.source.symbol);
+        source.setText("Source: " + shortestPath.getSource().getSymbol());
         shortestPath.dijkstra();
         shortestPathGraph(0);
         shortestPathNextStep.setDisable(false);
@@ -488,7 +491,7 @@ public class Controller implements Initializable {
     /** =========================================================== **/
 
     public boolean validateSource() {
-        if(Graph.searchVertex(shortestPathSource.getText(), Graph.vertices) == -1){
+        if(Graph.searchVertex(shortestPathSource.getText(), Graph.getVertices()) == -1){
             alert.setContentText("This vertex doesn't exist in the set of vertices entered. Please re-enter it!");
             return false;
         }
@@ -496,7 +499,7 @@ public class Controller implements Initializable {
     }
 
     public boolean validateSourceAndSink() {
-        if ((Graph.searchVertex(maxFlowSource.getText(), Graph.vertices) == -1) || (Graph.searchVertex(maxFlowSink.getText(), Graph.vertices) == -1)){
+        if ((Graph.searchVertex(maxFlowSource.getText(), Graph.getVertices()) == -1) || (Graph.searchVertex(maxFlowSink.getText(), Graph.getVertices()) == -1)){
             alert.setContentText("The input contains vertices that don't exist in the set of vertices entered. Please re-enter the input!");
             return false;
         }
@@ -510,7 +513,7 @@ public class Controller implements Initializable {
     }
 
     public boolean validateEdgeInput() {
-        if ((Graph.searchVertex(edgeTo.getText(), Graph.vertices) == -1) || (Graph.searchVertex(edgeFrom.getText(), Graph.vertices) == -1)){
+        if ((Graph.searchVertex(edgeTo.getText(), Graph.getVertices()) == -1) || (Graph.searchVertex(edgeFrom.getText(), Graph.getVertices()) == -1)){
             alert.setContentText("The input contains vertices that don't exist in the set of vertices entered. Please re-enter the input!");
             return false;
         }
@@ -520,20 +523,20 @@ public class Controller implements Initializable {
             return false;
         }
 
-        for (int j = 0; j < Graph.edges.size(); j++) {
-            if (Graph.edges.get(j).vertex_First.symbol.equalsIgnoreCase(edgeTo.getText())
-                    && Graph.edges.get(j).vertex_Second.symbol.equalsIgnoreCase(edgeFrom.getText()) && flag){
+        for (int j = 0; j < Graph.getEdges().size(); j++) {
+            if (Graph.getEdges().get(j).getVertex_First().getSymbol().equalsIgnoreCase(edgeTo.getText())
+                    && Graph.getEdges().get(j).getVertex_Second().getSymbol().equalsIgnoreCase(edgeFrom.getText()) && flag){
                 if(update || delete){
-                    Graph.edges.remove(j);
+                    Graph.getEdges().remove(j);
                     return true;
                 }
                 alert.setContentText("There is already an edge between " + edgeTo.getText() + " and " + edgeFrom.getText());
                 return false;
             }
-            if (Graph.edges.get(j).vertex_First.symbol.equalsIgnoreCase(edgeFrom.getText())
-                    && Graph.edges.get(j).vertex_Second.symbol.equalsIgnoreCase(edgeTo.getText())){
+            if (Graph.getEdges().get(j).getVertex_First().getSymbol().equalsIgnoreCase(edgeFrom.getText())
+                    && Graph.getEdges().get(j).getVertex_Second().getSymbol().equalsIgnoreCase(edgeTo.getText())){
                 if(update || delete){
-                    Graph.edges.remove(j);
+                    Graph.getEdges().remove(j);
                     return true;
                 }
                 alert.setContentText("There is already an edge between " + edgeFrom.getText() + " and " + edgeTo.getText());

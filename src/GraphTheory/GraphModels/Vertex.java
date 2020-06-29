@@ -1,8 +1,8 @@
-package GraphTheory;
+package GraphTheory.GraphModels;
 
 public class Vertex {
 
-    public String symbol;
+    private String symbol;
 
     public Vertex(String symbol) {
         this.symbol = symbol;
@@ -14,10 +14,6 @@ public class Vertex {
 
     public String getSymbol() {
         return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
     }
 
     @Override

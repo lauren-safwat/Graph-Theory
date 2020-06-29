@@ -1,5 +1,9 @@
 package GraphTheory;
 
+import GraphTheory.GraphModels.Edge;
+import GraphTheory.GraphModels.EdgeType;
+import GraphTheory.GraphModels.Graph;
+import GraphTheory.GraphModels.Vertex;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -18,6 +22,7 @@ import javafx.scene.transform.Rotate;
 
 import java.util.ArrayList;
 
+import static GraphTheory.ShortestPath.getDijkstraSteps;
 import static java.lang.Math.PI;
 
 public class GraphDrawer {
@@ -36,15 +41,15 @@ public class GraphDrawer {
             StackPane dotA = getDot("skyblue", vertices.get(i).getSymbol());
             if (shortPath) {
                 String dotName = vertices.get(i).getSymbol() + "/";
-                if(ShortestPath.distances.get(idx)[i] == Integer.MAX_VALUE)
+                if(ShortestPath.getDistances().get(idx)[i] == Integer.MAX_VALUE)
                     dotName += "∞";
                 else
-                    dotName += ShortestPath.distances.get(idx)[i];
+                    dotName += ShortestPath.getDistances().get(idx)[i];
 
                 dotA = getDot("skyblue", dotName);
 
                 for (int j = 0; j <= idx; j++) {
-                    if (ShortestPath.shortestSteps.get(j).contains(vertices.get(i).symbol))
+                    if (ShortestPath.getShortestSteps().get(j).contains(vertices.get(i).getSymbol()))
                         dotA = getDot("yellow", dotName);
                 }
             }
@@ -53,8 +58,8 @@ public class GraphDrawer {
             dots.add(dotA);
         }
         for (i = 0; i < edges.size(); i++) {
-            StackPane dotA = dots.get(Graph.searchVertex(edges.get(i).vertex_First.symbol, vertices));
-            StackPane dotB = dots.get(Graph.searchVertex(edges.get(i).vertex_Second.symbol, vertices));
+            StackPane dotA = dots.get(Graph.searchVertex(edges.get(i).getVertex_First().getSymbol(), vertices));
+            StackPane dotB = dots.get(Graph.searchVertex(edges.get(i).getVertex_Second().getSymbol(), vertices));
 
             boolean directed = false;
             if (edges.get(i).getType().equals(EdgeType.DIRECTED_EDGE))
@@ -88,18 +93,17 @@ public class GraphDrawer {
     }
 
     private int isBidirectional(Edge edge, ArrayList<Edge> edges) {
-        for (int j = 0; j < edges.size(); j++) {
-            if (edges.get(j).vertex_First == edge.vertex_Second && edges.get(j).vertex_Second == edge.vertex_First)
+        for (int j = 0; j < edges.size(); j++)
+            if (edges.get(j).getVertex_First() == edge.getVertex_Second() && edges.get(j).getVertex_Second() == edge.getVertex_First())
                 return j;
-        }
         return -1;
     }
 
     private void buildSingleDirectionalLine(StackPane startDot, StackPane endDot, Pane parent, boolean hasEndArrow, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
         boolean contained = false;
         if (shortPath && (idx != 0)) {
-            for (int j = 0; j < ShortestPath.dijkstraSteps.get(idx - 1).size(); j++) {
-                if (ShortestPath.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
+            for (int j = 0; j < getDijkstraSteps().get(idx - 1).size(); j++) {
+                if (getDijkstraSteps().get(idx - 1).get(j).getEdgeName().equals(edges.get(i).getEdgeName())) {
                     contained = true;
                     break;
                 }
@@ -121,8 +125,8 @@ public class GraphDrawer {
     private void buildBiDirectionalLine(StackPane startDot, StackPane endDot, Pane parent, ArrayList<Edge> edges, boolean capacity, int idx, boolean shortPath) {
         boolean contained = false;
         if (shortPath && (idx != 0)) {
-            for (int j = 0; j < ShortestPath.dijkstraSteps.get(idx - 1).size(); j++) {
-                if (ShortestPath.dijkstraSteps.get(idx - 1).get(j).edgeName.equals(edges.get(i).edgeName)) {
+            for (int j = 0; j < getDijkstraSteps().get(idx - 1).size(); j++) {
+                if (getDijkstraSteps().get(idx - 1).get(j).getEdgeName().equals(edges.get(i).getEdgeName())) {
                     contained = true;
                     break;
                 }
@@ -269,11 +273,11 @@ public class GraphDrawer {
 
         Label lb;
         if (capacity)
-            lb = new Label(edges.get(i).getEdgeName() + ", c = " + edges.get(i).weight);
+            lb = new Label(edges.get(i).getEdgeName() + ", c = " + edges.get(i).getWeight());
         else if(shortestPath)
-            lb = new Label(edges.get(i).getEdgeName() + ", d = " + edges.get(i).weight);
+            lb = new Label(edges.get(i).getEdgeName() + ", d = " + edges.get(i).getWeight());
         else
-            lb = new Label(edges.get(i).getEdgeName() + ", f = " + edges.get(i).flow);
+            lb = new Label(edges.get(i).getEdgeName() + ", f = " + edges.get(i).getFlow());
         lb.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
         lb.setTextFill(Color.BLACK);
         DoubleBinding wgtSqrHalfWidth = weight.widthProperty().divide(2);
