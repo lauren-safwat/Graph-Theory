@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class welcomePageController implements Initializable {
@@ -22,7 +23,7 @@ public class welcomePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Image image = new Image("/imgs/team.png", 1900, 980, false, true);
+        Image image = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("imgs/team.png")), 1900, 980, false, true);
 
         welcomeImage.setPreserveRatio(true);
         welcomeImage.setImage(image);

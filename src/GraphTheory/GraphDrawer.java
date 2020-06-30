@@ -11,6 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -19,11 +20,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+import static GraphTheory.GraphModels.Graph.getAdjacency;
+import static GraphTheory.GraphModels.Graph.getVertices;
 import static GraphTheory.ShortestPath.getDijkstraSteps;
 import static java.lang.Math.PI;
+import static java.lang.Math.random;
+
 
 public class GraphDrawer {
 
@@ -360,5 +366,80 @@ public class GraphDrawer {
             dotPane.setTranslateY(0);
         });
         return dotPane;
+    }
+
+    public void drawColoredGraph() {
+
+        int color_numbers = 0;
+        char[] colors = new char[getVertices().size()];
+        char label_color = 'A';
+
+        for (int i = 0; i < getVertices().size(); i++) {
+            if (colors[i] == 0) {
+                colors[i] = label_color;
+                color_numbers++;
+                label_color = (char) ((int) label_color + 1);
+            }
+            for (int j = 0; j < getVertices().size(); j++) {
+                if (colors[j] == 0 && getAdjacency()[i][j] == 0) {
+                    boolean adj = false;
+                    for (int k = 0; k < getVertices().size(); k++) {
+                        if (colors[k] == colors[i]) {
+                            if (getAdjacency()[k][j] == 1) {
+                                adj = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!adj)
+                        colors[j] = colors[i];
+                }
+            }
+        }
+
+        Pane root = new Pane();
+        Stage stage = new Stage();
+        Scene scene = new Scene(root, 800, 600);
+        stage.setScene(scene);
+        stage.setTitle("Graph Coloring");
+        Color[] fills = new Color[color_numbers];
+        Circle[] nodes = new Circle[getVertices().size()];
+        for (int i = 0; i < color_numbers; i++) {
+            fills[i] = new Color(random(), random(), random(), 1);
+        }
+        for (int i = 0; i < getVertices().size(); i++) {
+            nodes[i] = new Circle();
+            nodes[i].setCenterX(400 + 200 * Math.cos(2 * PI / getVertices().size() * i));
+            nodes[i].setCenterY(300 + 200 * Math.sin(2 * PI / getVertices().size() * i));
+            nodes[i].setRadius(20);
+            nodes[i].setFill(fills[(int) (colors[i]) - 65]);
+            nodes[i].setStroke(Color.BLACK);
+            Label t = new Label("" + getVertices().get(i).getSymbol());
+            t.layoutXProperty().bind(nodes[i].centerXProperty().add(-5));
+            t.layoutYProperty().bind(nodes[i].centerYProperty().add(-5));
+            root.getChildren().addAll(nodes[i], t);
+            int finalI = i;
+            nodes[i].setOnMouseDragged(new EventHandler<MouseEvent>() {
+                Circle c = nodes[finalI];
+                @Override
+                public void handle(MouseEvent event) {
+                    c.setCenterX(event.getX());
+                    c.setCenterY(event.getY());
+                }
+            });
+        }
+        for (int i = 0; i < getVertices().size(); i++) {
+            for (int j = 0; j < getVertices().size(); j++) {
+                if (getAdjacency()[i][j] == 1) {
+                    Line l = new Line();
+                    l.startXProperty().bind(nodes[i].centerXProperty());
+                    l.startYProperty().bind(nodes[i].centerYProperty());
+                    l.endXProperty().bind(nodes[j].centerXProperty());
+                    l.endYProperty().bind(nodes[j].centerYProperty());
+                    root.getChildren().add(0, l);
+                }
+            }
+        }
+        stage.show();
     }
 }
